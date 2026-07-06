@@ -1,0 +1,10 @@
+# Restaurant POS System
+
+Offline-first Restaurant POS and Kitchen Display System built with:
+
+- React Native
+- React
+- Node.js
+- Express
+- MySQL
+- Socket.IO
