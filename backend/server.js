@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
@@ -6,6 +7,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 require("./config/db");
 
@@ -20,6 +22,7 @@ app.use("/orders", orderRoutes);
 app.use("/history", historyRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/auth", authRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

@@ -1,0 +1,32 @@
+.dashboard {
+  padding: 20px;
+}
+
+.dashboard h1 {
+  margin-bottom: 20px;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card-box {
+  width: 220px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.card-box h2 {
+  color: green;
+  margin: 0;
+}
+
+.card-box p {
+  margin-top: 10px;
+  font-size: 18px;
+}

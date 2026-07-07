@@ -4,26 +4,58 @@ const db = require("../config/db");
 exports.getMenu = (req, res) => {
   db.query("SELECT * FROM menu_items", (err, results) => {
     if (err) {
-      return res.status(500).json(err);
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
+      });
     }
+
     res.json(results);
   });
 };
 
 // Add new menu item
 exports.addMenuItem = (req, res) => {
-  const { name, category, price } = req.body;
+  const { name, category, price, available } = req.body;
+
+  // Validation
+  if (!name || name.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Menu name is required",
+    });
+  }
+
+  if (!category || category.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Category is required",
+    });
+  }
+
+  if (!price || price <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Price must be greater than 0",
+    });
+  }
+
+  const isAvailable = available ?? 1;
 
   db.query(
-    "INSERT INTO menu_items (name, category, price) VALUES (?, ?, ?)",
-    [name, category, price],
-    (err, result) => {
+    "INSERT INTO menu_items (name, category, price, available) VALUES (?, ?, ?, ?)",
+    [name, category, price, isAvailable],
+    (err) => {
       if (err) {
-        return res.status(500).json(err);
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
       }
 
       res.json({
-        message: "Menu item added successfully!"
+        success: true,
+        message: "Menu item added successfully!",
       });
     }
   );
@@ -32,18 +64,46 @@ exports.addMenuItem = (req, res) => {
 // Update menu item
 exports.updateMenuItem = (req, res) => {
   const { id } = req.params;
-  const { name, category, price } = req.body;
+  const { name, category, price, available } = req.body;
+
+  // Validation
+  if (!name || name.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Menu name is required",
+    });
+  }
+
+  if (!category || category.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Category is required",
+    });
+  }
+
+  if (!price || price <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Price must be greater than 0",
+    });
+  }
+
+  const isAvailable = available ?? 1;
 
   db.query(
-    "UPDATE menu_items SET name=?, category=?, price=? WHERE id=?",
-    [name, category, price, id],
-    (err, result) => {
+    "UPDATE menu_items SET name=?, category=?, price=?, available=? WHERE id=?",
+    [name, category, price, isAvailable, id],
+    (err) => {
       if (err) {
-        return res.status(500).json(err);
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
       }
 
       res.json({
-        message: "Menu item updated successfully!"
+        success: true,
+        message: "Menu item updated successfully!",
       });
     }
   );
@@ -56,13 +116,17 @@ exports.deleteMenuItem = (req, res) => {
   db.query(
     "DELETE FROM menu_items WHERE id=?",
     [id],
-    (err, result) => {
+    (err) => {
       if (err) {
-        return res.status(500).json(err);
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
       }
 
       res.json({
-        message: "Menu item deleted successfully!"
+        success: true,
+        message: "Menu item deleted successfully!",
       });
     }
   );

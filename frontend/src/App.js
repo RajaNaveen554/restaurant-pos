@@ -3,14 +3,24 @@ import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import "./App.css";
 import OrderHistory from "./components/OrderHistory";
-import Receipt from "./components/Receipt";
 import AdminPanel from "./components/AdminPanel";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+import Sidebar from "./components/Sidebar";
+import Menu from "./components/Menu";
+import Cart from "./components/Cart";
 
 function App() {
   const [menu, setMenu] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
   const [cart, setCart] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [showHistory, setShowHistory] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const role = localStorage.getItem("role");
   const receiptRef = useRef(null);
 
   const handlePrint = useReactToPrint({
@@ -81,6 +91,7 @@ function App() {
       const response = await axios.post("http://localhost:5000/orders", {
         cart,
         total,
+        paymentMethod,
       });
 
       alert(response.data.message);
@@ -90,182 +101,52 @@ function App() {
       alert("Failed to place order");
     }
   };
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     <div className="container">
-      {/* Navigation Buttons */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          width: "200px",
-          marginBottom: "25px",
-        }}
-      >
-        <button
-          onClick={() => {
-            setShowHistory(false);
-            setShowAdmin(false);
-          }}
-          style={{
-            padding: "12px",
-            background: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
-        >
-          🍽 Menu
-        </button>
-        <button
-          onClick={() => {
-            setShowHistory(true);
-            setShowAdmin(false);
-          }}
-          style={{
-            padding: "12px",
-            background: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
-        >
-          📜 Order History
-        </button>
-        <button
-          onClick={() => {
-            setShowHistory(false);
-            setShowAdmin(true);
-          }}
-          style={{
-            padding: "12px",
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
-        >
-          👨‍💼 Admin Panel
-        </button>
-      </div>
+      <Sidebar
+        setShowDashboard={setShowDashboard}
+        setShowHistory={setShowHistory}
+        setShowAdmin={setShowAdmin}
+        setIsLoggedIn={setIsLoggedIn}
+        role={role}
+      />
 
-      {showAdmin ? (
+      {showDashboard ? (
+        <Dashboard />
+      ) : showAdmin ? (
         <AdminPanel />
       ) : showHistory ? (
         <OrderHistory />
       ) : (
         <>
-          {/* Menu */}
-          <div className="menu">
-            <h1>🍽 Restaurant POS</h1>
+          <Menu
+            menu={menu}
+            addToCart={addToCart}
+            search={search}
+            setSearch={setSearch}
+            category={category}
+            setCategory={setCategory}
+          />
 
-            {menu.map((item) => (
-              <div className="card" key={item.id}>
-                <h3>{item.name}</h3>
-
-                <p>Category: {item.category}</p>
-
-                <p>Price: ₹{item.price}</p>
-
-                <button onClick={() => addToCart(item)}>Add to Cart</button>
-              </div>
-            ))}
-          </div>
-
-          {/* Cart */}
-          <div className="cart">
-            <h2>🛒 Cart</h2>
-
-            {cart.length === 0 ? (
-              <p>No items in cart.</p>
-            ) : (
-              cart.map((item) => (
-                <div className="cart-item" key={item.id}>
-                  <h4>{item.name}</h4>
-
-                  <p>
-                    ₹{item.price} × {item.quantity} = ₹
-                    {Number(item.price) * item.quantity}
-                  </p>
-
-                  <button onClick={() => decreaseQty(item.id)}>-</button>
-
-                  <span style={{ margin: "0 10px" }}>{item.quantity}</span>
-
-                  <button onClick={() => increaseQty(item.id)}>+</button>
-
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    style={{
-                      marginLeft: "10px",
-                      background: "red",
-                      color: "white",
-                      border: "none",
-                      padding: "6px 10px",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Remove
-                  </button>
-
-                  <hr />
-                </div>
-              ))
-            )}
-
-            <h2>Total: ₹{total}</h2>
-
-            <button
-              onClick={placeOrder}
-              style={{
-                width: "100%",
-                padding: "12px",
-                background: "green",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginTop: "10px",
-                fontSize: "16px",
-              }}
-            >
-              ✅ Place Order
-            </button>
-
-            <button
-              onClick={handlePrint}
-              style={{
-                width: "100%",
-                padding: "12px",
-                background: "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginTop: "10px",
-                fontSize: "16px",
-              }}
-            >
-              🖨️ Print Bill
-            </button>
-            <div style={{ display: "none" }}>
-              <div ref={receiptRef}>
-                <Receipt cart={cart} total={total} />
-              </div>
-            </div>
-          </div>
+          <Cart
+            cart={cart}
+            total={total}
+            increaseQty={increaseQty}
+            decreaseQty={decreaseQty}
+            removeItem={removeItem}
+            placeOrder={placeOrder}
+            handlePrint={handlePrint}
+            receiptRef={receiptRef}
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+          />
         </>
       )}
     </div>
   );
 }
-
 export default App;
