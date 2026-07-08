@@ -1,42 +1,35 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  background: #f4f6f9;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .container {
   display: flex;
-  padding: 20px;
+  min-height: 100vh;
+  background: #f4f6f9;
 }
 
-.menu {
-  width: 70%;
+.main-content {
+  flex: 1;
+  padding: 90px 25px 25px;
+ 
+}
+.pos-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
 }
 
-.cart {
-  width: 30%;
-  background: white;
-  padding: 20px;
-  margin-left: 20px;
-  border-radius: 10px;
+.pos-layout > :first-child {
+  flex: 1;
 }
 
-.card {
-  background: white;
-  margin-bottom: 15px;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-button {
-  background: green;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background: darkgreen;
+.pos-layout > :last-child {
+  width: 350px;
+  flex-shrink: 0;
 }

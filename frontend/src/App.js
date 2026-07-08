@@ -9,6 +9,8 @@ import Dashboard from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
 import Menu from "./components/Menu";
 import Cart from "./components/Cart";
+import UserManagement from "./components/UserManagement";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [menu, setMenu] = useState([]);
@@ -19,6 +21,7 @@ function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const role = localStorage.getItem("role");
   const receiptRef = useRef(null);
@@ -107,46 +110,54 @@ function App() {
 
   return (
     <div className="container">
+      <Navbar role={role} />
+
       <Sidebar
         setShowDashboard={setShowDashboard}
         setShowHistory={setShowHistory}
         setShowAdmin={setShowAdmin}
+        setShowUsers={setShowUsers}
         setIsLoggedIn={setIsLoggedIn}
         role={role}
       />
 
-      {showDashboard ? (
-        <Dashboard />
-      ) : showAdmin ? (
-        <AdminPanel />
-      ) : showHistory ? (
-        <OrderHistory />
-      ) : (
-        <>
-          <Menu
-            menu={menu}
-            addToCart={addToCart}
-            search={search}
-            setSearch={setSearch}
-            category={category}
-            setCategory={setCategory}
-          />
+      <div className="main-content">
+        {showDashboard ? (
+          <Dashboard />
+        ) : showAdmin ? (
+          <AdminPanel />
+        ) : showUsers ? (
+          <UserManagement />
+        ) : showHistory ? (
+          <OrderHistory />
+        ) : (
+          <div className="pos-layout">
+            <Menu
+              menu={menu}
+              addToCart={addToCart}
+              search={search}
+              setSearch={setSearch}
+              category={category}
+              setCategory={setCategory}
+            />
 
-          <Cart
-            cart={cart}
-            total={total}
-            increaseQty={increaseQty}
-            decreaseQty={decreaseQty}
-            removeItem={removeItem}
-            placeOrder={placeOrder}
-            handlePrint={handlePrint}
-            receiptRef={receiptRef}
-            paymentMethod={paymentMethod}
-            setPaymentMethod={setPaymentMethod}
-          />
-        </>
-      )}
+            <Cart
+              cart={cart}
+              total={total}
+              increaseQty={increaseQty}
+              decreaseQty={decreaseQty}
+              removeItem={removeItem}
+              placeOrder={placeOrder}
+              handlePrint={handlePrint}
+              receiptRef={receiptRef}
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
 export default App;

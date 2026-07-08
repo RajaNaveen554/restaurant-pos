@@ -1,5 +1,14 @@
 import React from "react";
+import "./Cart.css";
+import {
+  FaPlus,
+  FaMinus,
+  FaTrash,
+  FaPrint,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 import Receipt from "./Receipt";
+
 function Cart({
   cart,
   total,
@@ -12,102 +21,91 @@ function Cart({
   paymentMethod,
   setPaymentMethod,
 }) {
+  const gst = (total * 0.05).toFixed(2);
+  const grandTotal = (Number(total) + Number(gst)).toFixed(2);
+
   return (
-    <div className="cart">
-      <h2>🛒 Cart</h2>
+    <div className="cart-container">
+      <h2>🛒 Current Order</h2>
 
       {cart.length === 0 ? (
-        <p>No items in cart.</p>
+        <div className="empty-cart">
+          <h3>Your cart is empty</h3>
+          <p>Add food items to begin.</p>
+        </div>
       ) : (
-        cart.map((item) => (
-          <div className="cart-item" key={item.id}>
-            <h4>{item.name}</h4>
+        <>
+          {cart.map((item) => (
+            <div className="cart-card" key={item.id}>
+              <div className="cart-info">
+                <h3>{item.name}</h3>
+                <p>₹{item.price}</p>
+              </div>
 
-            <p>
-              ₹{item.price} × {item.quantity} = ₹
-              {Number(item.price) * item.quantity}
-            </p>
+              <div className="qty-section">
+                <button onClick={() => decreaseQty(item.id)}>
+                  <FaMinus />
+                </button>
 
-            <button onClick={() => decreaseQty(item.id)}>-</button>
+                <span>{item.quantity}</span>
 
-            <span style={{ margin: "0 10px" }}>{item.quantity}</span>
+                <button onClick={() => increaseQty(item.id)}>
+                  <FaPlus />
+                </button>
 
-            <button onClick={() => increaseQty(item.id)}>+</button>
+                <button
+                  className="delete-btn"
+                  onClick={() => removeItem(item.id)}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            </div>
+          ))}
 
-            <button
-              onClick={() => removeItem(item.id)}
-              style={{
-                marginLeft: "10px",
-                background: "red",
-                color: "white",
-                border: "none",
-                padding: "6px 10px",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Remove
-            </button>
+          <div className="summary">
+            <div>
+              <span>Subtotal</span>
+              <span>₹{total}</span>
+            </div>
 
-            <hr />
+            <div>
+              <span>GST (5%)</span>
+              <span>₹{gst}</span>
+            </div>
+
+            <div className="grand-total">
+              <span>Total</span>
+              <span>₹{grandTotal}</span>
+            </div>
           </div>
-        ))
+
+          <div className="payment-box">
+            <FaMoneyBillWave />
+
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            >
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
+
+          <button className="place-btn" onClick={placeOrder}>
+            ✅ Place Order
+          </button>
+
+          <button className="print-btn" onClick={handlePrint}>
+            <FaPrint /> Print Bill
+          </button>
+        </>
       )}
-      <h3>Payment Method</h3>
-
-      <select
-        value={paymentMethod}
-        onChange={(e) => setPaymentMethod(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px",
-          marginBottom: "20px",
-        }}
-      >
-        <option value="Cash">💵 Cash</option>
-        <option value="UPI">📱 UPI</option>
-        <option value="Card">💳 Card</option>
-      </select>
-
-      <h2>Total: ₹{total}</h2>
-
-      <button
-        onClick={placeOrder}
-        style={{
-          width: "100%",
-          padding: "12px",
-          background: "green",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          marginTop: "10px",
-          fontSize: "16px",
-        }}
-      >
-        ✅ Place Order
-      </button>
-
-      <button
-        onClick={handlePrint}
-        style={{
-          width: "100%",
-          padding: "12px",
-          background: "#2563eb",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          marginTop: "10px",
-          fontSize: "16px",
-        }}
-      >
-        🖨️ Print Bill
-      </button>
 
       <div style={{ display: "none" }}>
         <div ref={receiptRef}>
-          <Receipt cart={cart} total={total} />
+          <Receipt cart={cart} total={grandTotal} />
         </div>
       </div>
     </div>

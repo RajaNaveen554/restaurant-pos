@@ -1,0 +1,104 @@
+.cart-container{
+    width:350px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.cart-container h2{
+    margin-bottom:20px;
+}
+
+.empty-cart{
+    text-align:center;
+    padding:40px 10px;
+    color:#888;
+}
+
+.cart-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid #eee;
+}
+
+.cart-info h3{
+    margin:0;
+}
+
+.cart-info p{
+    margin-top:5px;
+    color:#16a34a;
+    font-weight:bold;
+}
+
+.qty-section{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.qty-section button{
+    width:34px;
+    height:34px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f3f4f6;
+}
+
+.delete-btn{
+    background:#ef4444 !important;
+    color:white;
+}
+
+.summary{
+    margin-top:20px;
+}
+
+.summary div{
+    display:flex;
+    justify-content:space-between;
+    margin:8px 0;
+}
+
+.grand-total{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.payment-box{
+    margin-top:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.payment-box select{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+}
+
+.place-btn,
+.print-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:15px;
+    font-size:16px;
+}
+
+.place-btn{
+    background:#16a34a;
+    color:white;
+}
+
+.print-btn{
+    background:#2563eb;
+    color:white;
+}

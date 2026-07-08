@@ -1,89 +1,172 @@
-import React from "react";
+import React, { useState } from "react";
+import "./Sidebar.css";
+import {
+  FaBars,
+  FaTimes,
+  FaHome,
+  FaUtensils,
+  FaClipboardList,
+  FaUsers,
+  FaUserShield,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 function Sidebar({
   setShowDashboard,
   setShowHistory,
   setShowAdmin,
+  setShowUsers,
   setIsLoggedIn,
   role,
 }) {
-  const buttonStyle = {
-    padding: "12px",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px",
-    marginBottom: "10px",
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("Menu");
+
+  const closeSidebar = () => setOpen(false);
+
+  const handleMenu = () => {
+    setActive("Menu");
+    setShowDashboard(false);
+    setShowHistory(false);
+    setShowAdmin(false);
+    setShowUsers(false);
+    closeSidebar();
+  };
+
+  const handleDashboard = () => {
+    setActive("Dashboard");
+    setShowDashboard(true);
+    setShowHistory(false);
+    setShowAdmin(false);
+    setShowUsers(false);
+    closeSidebar();
+  };
+
+  const handleHistory = () => {
+    setActive("Order History");
+    setShowDashboard(false);
+    setShowHistory(true);
+    setShowAdmin(false);
+    setShowUsers(false);
+    closeSidebar();
+  };
+
+  const handleAdmin = () => {
+    setActive("Admin Panel");
+    setShowDashboard(false);
+    setShowHistory(false);
+    setShowAdmin(true);
+    setShowUsers(false);
+    closeSidebar();
+  };
+
+  const handleUsers = () => {
+    setActive("Users");
+    setShowDashboard(false);
+    setShowHistory(false);
+    setShowAdmin(false);
+    setShowUsers(true);
+    closeSidebar();
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "220px",
-        gap: "10px",
-      }}
-    >
-      <button
-        style={{ ...buttonStyle, background: "green" }}
-        onClick={() => {
-          setShowDashboard(false);
-          setShowHistory(false);
-          setShowAdmin(false);
-        }}
-      >
-        🍽 Menu
-      </button>
-
-      {role === "admin" && (
-        <button
-          style={{ ...buttonStyle, background: "#f59e0b" }}
-          onClick={() => {
-            setShowDashboard(true);
-            setShowHistory(false);
-            setShowAdmin(false);
-          }}
-        >
-          📊 Dashboard
+    <>
+      {/* Hamburger Button */}
+      {!open && (
+        <button className="menu-btn" onClick={() => setOpen(true)}>
+          <FaBars />
         </button>
       )}
 
-      <button
-        style={{ ...buttonStyle, background: "#16a34a" }}
-        onClick={() => {
-          setShowDashboard(false);
-          setShowHistory(true);
-          setShowAdmin(false);
-        }}
-      >
-        📜 Order History
-      </button>
+      {/* Overlay */}
+      {open && <div className="overlay" onClick={closeSidebar}></div>}
 
-      {role === "admin" && (
+      {/* Sidebar */}
+      <div className={`sidebar ${open ? "show" : ""}`}>
+        {/* Header */}
+        <div className="sidebar-header">
+          <div className="logo-section">
+            <span className="logo">🍽</span>
+
+            <div>
+              <h2>Restaurant POS</h2>
+              <p>{role === "admin" ? "Administrator" : "Cashier"}</p>
+            </div>
+          </div>
+
+          <button className="close-btn" onClick={closeSidebar}>
+            <FaTimes />
+          </button>
+        </div>
+
+        {/* Navigation */}
+
         <button
-          style={{ ...buttonStyle, background: "#2563eb" }}
-          onClick={() => {
-            setShowDashboard(false);
-            setShowHistory(false);
-            setShowAdmin(true);
-          }}
+          className={`nav-btn ${active === "Menu" ? "active" : ""}`}
+          onClick={handleMenu}
         >
-          👨‍💼 Admin Panel
+          <FaUtensils />
+          <span>Menu</span>
         </button>
-      )}
 
-      <button
-        style={{ ...buttonStyle, background: "#dc2626" }}
-        onClick={() => {
-          localStorage.removeItem("token");
-          setIsLoggedIn(false);
-        }}
-      >
-        🚪 Logout
-      </button>
-    </div>
+        {role === "admin" && (
+          <button
+            className={`nav-btn ${
+              active === "Dashboard" ? "active" : ""
+            }`}
+            onClick={handleDashboard}
+          >
+            <FaHome />
+            <span>Dashboard</span>
+          </button>
+        )}
+
+        <button
+          className={`nav-btn ${
+            active === "Order History" ? "active" : ""
+          }`}
+          onClick={handleHistory}
+        >
+          <FaClipboardList />
+          <span>Order History</span>
+        </button>
+
+        {role === "admin" && (
+          <button
+            className={`nav-btn ${
+              active === "Admin Panel" ? "active" : ""
+            }`}
+            onClick={handleAdmin}
+          >
+            <FaUserShield />
+            <span>Admin Panel</span>
+          </button>
+        )}
+
+        {role === "admin" && (
+          <button
+            className={`nav-btn ${active === "Users" ? "active" : ""}`}
+            onClick={handleUsers}
+          >
+            <FaUsers />
+            <span>Users</span>
+          </button>
+        )}
+
+        {/* Footer */}
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={logout}>
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 

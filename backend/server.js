@@ -8,6 +8,7 @@ const historyRoutes = require("./routes/historyRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 require("./config/db");
 
@@ -23,6 +24,7 @@ app.use("/history", historyRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

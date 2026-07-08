@@ -1,4 +1,6 @@
 import React from "react";
+import "./Menu.css";
+import { FaSearch, FaStar, FaShoppingCart } from "react-icons/fa";
 
 function Menu({
   menu,
@@ -8,56 +10,90 @@ function Menu({
   category,
   setCategory,
 }) {
+  const categories = [
+    "All",
+    "Biryani",
+    "Bread",
+    "Curry",
+    "Starter",
+    "Rice",
+    "Drinks",
+    "Dessert",
+  ];
+
+  const filteredMenu = menu.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesCategory =
+      category === "All" || item.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="menu">
-      <h1>🍽 Restaurant POS</h1>
+    <div className="menu-container">
+      <h1 className="menu-title">🍽 Restaurant Menu</h1>
 
-      <input
-        type="text"
-        placeholder="🔍 Search Menu..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "10px",
-          marginBottom: "15px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-        }}
-      />
+      {/* Search */}
+      <div className="search-box">
+        <FaSearch />
 
-      <div style={{ marginBottom: "20px" }}>
-        <button onClick={() => setCategory("All")}>All</button>
-        <button onClick={() => setCategory("Biryani")}>Biryani</button>
-        <button onClick={() => setCategory("Starter")}>Starter</button>
-        <button onClick={() => setCategory("Drinks")}>Drinks</button>
-        <button onClick={() => setCategory("Dessert")}>Dessert</button>
+        <input
+          type="text"
+          placeholder="Search food..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
-      {menu
-        .filter((item) => {
-          const matchesSearch = item.name
-            .toLowerCase()
-            .includes(search.toLowerCase());
+      {/* Categories */}
+      <div className="category-buttons">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={category === cat ? "active-category" : ""}
+            onClick={() => setCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
-          const matchesCategory =
-            category === "All" || item.category === category;
+      {/* Food Cards */}
+      <div className="menu-grid">
+        {filteredMenu.map((item) => (
+          <div className="food-card" key={item.id}>
+            <img
+              src={item.image || "/images/no-image.jpg"}
+              alt={item.name}
+              className="food-image"
+            />
 
-          return matchesSearch && matchesCategory;
-        })
-        .map((item) => (
-          <div className="card" key={item.id}>
-            <h3>{item.name}</h3>
+            <div className="food-content">
+              <h3>{item.name}</h3>
 
-            <p>Category: {item.category}</p>
+              <span className="badge">{item.category}</span>
 
-            <p>Price: ₹{item.price}</p>
+              <div className="rating">
+                <FaStar color="gold" />
+                <span>4.8</span>
+              </div>
 
-            <button onClick={() => addToCart(item)}>
-              Add to Cart
-            </button>
+              <h2>₹{item.price}</h2>
+
+              <button
+                className="cart-btn"
+                onClick={() => addToCart(item)}
+              >
+                <FaShoppingCart />
+                <span>Add to Cart</span>
+              </button>
+            </div>
           </div>
         ))}
+      </div>
     </div>
   );
 }
