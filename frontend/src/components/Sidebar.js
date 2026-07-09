@@ -18,11 +18,12 @@ function Sidebar({
   setShowUsers,
   setIsLoggedIn,
   role,
+  sidebarOpen,
+  setSidebarOpen,
 }) {
-  const [open, setOpen] = useState(false);
   const [active, setActive] = useState("Menu");
 
-  const closeSidebar = () => setOpen(false);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const handleMenu = () => {
     setActive("Menu");
@@ -77,21 +78,21 @@ function Sidebar({
   return (
     <>
       {/* Hamburger Button */}
-      {!open && (
-        <button className="menu-btn" onClick={() => setOpen(true)}>
+      {!sidebarOpen && (
+        <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
           <FaBars />
         </button>
       )}
 
       {/* Overlay */}
-      {open && <div className="overlay" onClick={closeSidebar}></div>}
+      {sidebarOpen && <div className="overlay" onClick={closeSidebar}></div>}
 
       {/* Sidebar */}
-      <div className={`sidebar ${open ? "show" : ""}`}>
+      <div className={`sidebar ${sidebarOpen ? "show" : ""}`}>
         {/* Header */}
         <div className="sidebar-header">
           <div className="logo-section">
-            <span className="logo">🍽</span>
+            <div className="logo">🍽</div>
 
             <div>
               <h2>Restaurant POS</h2>
@@ -116,9 +117,7 @@ function Sidebar({
 
         {role === "admin" && (
           <button
-            className={`nav-btn ${
-              active === "Dashboard" ? "active" : ""
-            }`}
+            className={`nav-btn ${active === "Dashboard" ? "active" : ""}`}
             onClick={handleDashboard}
           >
             <FaHome />
@@ -127,9 +126,7 @@ function Sidebar({
         )}
 
         <button
-          className={`nav-btn ${
-            active === "Order History" ? "active" : ""
-          }`}
+          className={`nav-btn ${active === "Order History" ? "active" : ""}`}
           onClick={handleHistory}
         >
           <FaClipboardList />
@@ -138,9 +135,7 @@ function Sidebar({
 
         {role === "admin" && (
           <button
-            className={`nav-btn ${
-              active === "Admin Panel" ? "active" : ""
-            }`}
+            className={`nav-btn ${active === "Admin Panel" ? "active" : ""}`}
             onClick={handleAdmin}
           >
             <FaUserShield />

@@ -1,0 +1,138 @@
+.admin-container{
+    padding:30px;
+}
+
+.admin-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.admin-header h1{
+    color:#1f2937;
+}
+
+.add-btn{
+    background:#16a34a;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:15px;
+}
+
+.add-btn:hover{
+    background:#15803d;
+}
+
+.search-box-admin{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:white;
+    padding:12px 18px;
+    border-radius:12px;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.search-box-admin input{
+    border:none;
+    outline:none;
+    width:100%;
+    font-size:15px;
+}
+
+.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.admin-table th{
+    background:#16a34a;
+    color:white;
+    padding:16px;
+    text-align:left;
+}
+
+.admin-table td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+}
+
+.admin-table tr:hover{
+    background:#f9fafb;
+}
+
+.food-img{
+    width:60px;
+    height:60px;
+    border-radius:10px;
+    object-fit:cover;
+}
+
+.status{
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:13px;
+}
+
+.available{
+    background:#22c55e;
+}
+
+.unavailable{
+    background:#ef4444;
+}
+
+.edit-btn,
+.delete-btn{
+    border:none;
+    width:38px;
+    height:38px;
+    border-radius:8px;
+    cursor:pointer;
+    color:white;
+    margin-right:8px;
+}
+
+.edit-btn{
+    background:#3b82f6;
+}
+
+.delete-btn{
+    background:#ef4444;
+}
+
+.edit-btn:hover{
+    background:#2563eb;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+@media(max-width:768px){
+
+.admin-header{
+    flex-direction:column;
+    gap:15px;
+    align-items:flex-start;
+}
+
+.admin-table{
+    display:block;
+    overflow-x:auto;
+}
+
+}

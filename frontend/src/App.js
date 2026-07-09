@@ -22,6 +22,8 @@ function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const [showCart, setShowCart] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const role = localStorage.getItem("role");
   const receiptRef = useRef(null);
@@ -110,7 +112,12 @@ function App() {
 
   return (
     <div className="container">
-      <Navbar role={role} />
+      <Navbar
+        role={role}
+        sidebarOpen={sidebarOpen}
+        showCart={showCart}
+        setShowCart={setShowCart}
+      />
 
       <Sidebar
         setShowDashboard={setShowDashboard}
@@ -119,9 +126,11 @@ function App() {
         setShowUsers={setShowUsers}
         setIsLoggedIn={setIsLoggedIn}
         role={role}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
       />
 
-      <div className="main-content">
+      <div className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`}>
         {showDashboard ? (
           <Dashboard />
         ) : showAdmin ? (
@@ -132,27 +141,32 @@ function App() {
           <OrderHistory />
         ) : (
           <div className="pos-layout">
-            <Menu
-              menu={menu}
-              addToCart={addToCart}
-              search={search}
-              setSearch={setSearch}
-              category={category}
-              setCategory={setCategory}
-            />
-
-            <Cart
-              cart={cart}
-              total={total}
-              increaseQty={increaseQty}
-              decreaseQty={decreaseQty}
-              removeItem={removeItem}
-              placeOrder={placeOrder}
-              handlePrint={handlePrint}
-              receiptRef={receiptRef}
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-            />
+            <div className="menu-container">
+              <Menu
+                menu={menu}
+                addToCart={addToCart}
+                search={search}
+                setSearch={setSearch}
+                category={category}
+                setCategory={setCategory}
+              />
+            </div>
+            <div className={showCart ? "cart" : "cart cart-hidden"}>
+              {showCart && (
+                <Cart
+                  cart={cart}
+                  total={total}
+                  increaseQty={increaseQty}
+                  decreaseQty={decreaseQty}
+                  removeItem={removeItem}
+                  placeOrder={placeOrder}
+                  handlePrint={handlePrint}
+                  receiptRef={receiptRef}
+                  paymentMethod={paymentMethod}
+                  setPaymentMethod={setPaymentMethod}
+                />
+              )}
+            </div>
           </div>
         )}
       </div>

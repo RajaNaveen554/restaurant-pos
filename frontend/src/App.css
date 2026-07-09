@@ -14,22 +14,58 @@ body {
   background: #f4f6f9;
 }
 
+/* Main Content */
 .main-content {
   flex: 1;
-  padding: 90px 25px 25px;
- 
+  margin-top: 75px;
+  margin-left: 0;
+  padding: 25px;
+  transition: all 0.3s ease;
 }
+
+/* Move page when sidebar opens */
+.main-content.sidebar-open {
+  margin-left: 260px;
+}
+
+/* Menu + Cart Layout */
 .pos-layout {
   display: flex;
   gap: 20px;
   align-items: flex-start;
 }
 
-.pos-layout > :first-child {
+.menu-container {
   flex: 1;
+  transition: all 0.3s ease;
 }
 
-.pos-layout > :last-child {
+.cart {
   width: 350px;
-  flex-shrink: 0;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+  transition: all 0.3s ease;
+}
+.cart-hidden {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-left: -20px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding: 15px;
+  }
+
+  .pos-layout {
+    flex-direction: column;
+  }
+
+  .pos-layout > :last-child {
+    width: 100%;
+  }
 }
