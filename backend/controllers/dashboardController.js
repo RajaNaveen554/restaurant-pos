@@ -42,3 +42,24 @@ exports.getSummary = (req, res) => {
     }
   );
 };
+// Get Recent Orders
+exports.getRecentOrders = (req, res) => {
+  const sql = `
+    SELECT
+      id,
+      total,
+      payment_method,
+      order_date
+    FROM orders
+    ORDER BY order_date DESC
+    LIMIT 5
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    res.json(results);
+  });
+};

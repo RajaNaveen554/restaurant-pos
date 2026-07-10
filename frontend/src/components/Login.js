@@ -11,13 +11,17 @@ function Login({ onLogin }) {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/auth/login",
+        {
+          username,
+          password,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
+      localStorage.setItem("name", response.data.name);
 
       alert("Login Successful!");
 
@@ -32,7 +36,11 @@ function Login({ onLogin }) {
       <form className="login-box" onSubmit={handleLogin}>
         <h1>🍽 Restaurant POS</h1>
 
-        <h2>Admin Login</h2>
+        <h2>Sign In</h2>
+
+        <p className="login-subtitle">
+          Login to continue
+        </p>
 
         {error && <p className="error">{error}</p>}
 
@@ -50,7 +58,9 @@ function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button type="submit">Login</button>
+        <button type="submit">
+          Login
+        </button>
       </form>
     </div>
   );

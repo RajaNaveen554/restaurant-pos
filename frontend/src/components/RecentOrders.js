@@ -1,38 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./RecentOrders.css";
 
-const orders = [
-  {
-    id: "#1001",
-    customer: "Raja",
-    amount: "₹450",
-    payment: "UPI",
-    status: "Paid",
-  },
-  {
-    id: "#1002",
-    customer: "Naveen",
-    amount: "₹680",
-    payment: "Cash",
-    status: "Paid",
-  },
-  {
-    id: "#1003",
-    customer: "Rahul",
-    amount: "₹250",
-    payment: "Card",
-    status: "Pending",
-  },
-  {
-    id: "#1004",
-    customer: "Kiran",
-    amount: "₹390",
-    payment: "UPI",
-    status: "Paid",
-  },
-];
-
 function RecentOrders() {
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/dashboard/recent-orders")
+      .then((res) => {
+        setOrders(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div className="recent-orders-card">
       <h2>📋 Recent Orders</h2>
@@ -41,33 +22,31 @@ function RecentOrders() {
         <thead>
           <tr>
             <th>Order ID</th>
-            <th>Customer</th>
-            <th>Amount</th>
+            <th>Total</th>
             <th>Payment</th>
-            <th>Status</th>
+            <th>Date</th>
           </tr>
         </thead>
 
         <tbody>
-          {orders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.id}</td>
-              <td>{order.customer}</td>
-              <td>{order.amount}</td>
-              <td>{order.payment}</td>
-              <td>
-                <span
-                  className={
-                    order.status === "Paid"
-                      ? "paid"
-                      : "pending"
-                  }
-                >
-                  {order.status}
-                </span>
+          {orders.length === 0 ? (
+            <tr>
+              <td colSpan="4" style={{ textAlign: "center" }}>
+                No Orders Found
               </td>
             </tr>
-          ))}
+          ) : (
+            orders.map((order) => (
+              <tr key={order.id}>
+                <td>#{order.id}</td>
+                <td>₹{order.total}</td>
+                <td>{order.payment_method}</td>
+                <td>
+                  {new Date(order.order_date).toLocaleString("en-IN")}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

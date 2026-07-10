@@ -43,7 +43,7 @@ exports.login = (req, res) => {
         process.env.JWT_SECRET,
         {
           expiresIn: "2h",
-        }
+        },
       );
 
       res.json({
@@ -51,7 +51,8 @@ exports.login = (req, res) => {
         message: "Login Successful",
         token,
         role: user.role,
+        name: user.username, // or user.name if your table has a name column
       });
-    }
+    },
   );
 };

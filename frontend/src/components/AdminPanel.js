@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AdminPanel.css";
-import {
-  FaSearch,
-  FaPlus,
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
+import { FaSearch, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
-function AdminPanel() {
+function AdminPanel() {                       
   const [menu, setMenu] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -25,7 +20,6 @@ function AdminPanel() {
 
   return (
     <div className="admin-container">
-
       <div className="admin-header">
         <h1>👨‍💼 Admin Panel</h1>
 
@@ -61,21 +55,17 @@ function AdminPanel() {
         <tbody>
           {menu
             .filter((item) =>
-              item.name
-                .toLowerCase()
-                .includes(search.toLowerCase())
+              item.name.toLowerCase().includes(search.toLowerCase()),
             )
             .map((item) => (
               <tr key={item.id}>
-
                 <td>
                   <img
                     className="food-img"
                     src={`http://localhost:5000/uploads/${item.image}`}
                     alt={item.name}
                     onError={(e) => {
-                      e.target.src =
-                        "https://placehold.co/60x60?text=Food";
+                      e.target.src = "https://placehold.co/60x60?text=Food";
                     }}
                   />
                 </td>
@@ -89,9 +79,7 @@ function AdminPanel() {
                 <td>
                   <span
                     className={
-                      item.available
-                        ? "status available"
-                        : "status unavailable"
+                      item.available ? "status available" : "status unavailable"
                     }
                   >
                     {item.available ? "Available" : "Unavailable"}
@@ -107,12 +95,10 @@ function AdminPanel() {
                     <FaTrash />
                   </button>
                 </td>
-
               </tr>
             ))}
         </tbody>
       </table>
-
     </div>
   );
 }

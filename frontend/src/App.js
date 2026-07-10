@@ -22,7 +22,7 @@ function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
-  const [showCart, setShowCart] = useState(true);
+  const [showCart, setShowCart] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const role = localStorage.getItem("role");
@@ -42,7 +42,6 @@ function App() {
         console.error(error);
       });
   }, []);
-
   const addToCart = (item) => {
     const existingItem = cart.find((cartItem) => cartItem.id === item.id);
 
@@ -57,6 +56,9 @@ function App() {
     } else {
       setCart([...cart, { ...item, quantity: 1 }]);
     }
+
+    // Automatically open the cart after adding an item
+    setShowCart(true);
   };
 
   const increaseQty = (id) => {
@@ -100,7 +102,7 @@ function App() {
       });
 
       alert(response.data.message);
-      setCart([]);
+      setShowCart(false);
     } catch (error) {
       console.error(error);
       alert("Failed to place order");
@@ -117,6 +119,7 @@ function App() {
         sidebarOpen={sidebarOpen}
         showCart={showCart}
         setShowCart={setShowCart}
+        cartCount={cart.length}
       />
 
       <Sidebar

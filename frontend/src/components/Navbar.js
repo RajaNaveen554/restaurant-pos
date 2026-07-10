@@ -8,8 +8,17 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 
-function Navbar({ role, sidebarOpen, showCart, setShowCart }) {
+function Navbar({
+  role,
+  sidebarOpen,
+  showCart,
+  setShowCart,
+  cartCount,
+}) {
   const [time, setTime] = useState("");
+
+  // Get logged-in user details
+  const name = localStorage.getItem("name") || "User";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +37,7 @@ function Navbar({ role, sidebarOpen, showCart, setShowCart }) {
 
   return (
     <header className={`navbar ${sidebarOpen ? "sidebar-open" : ""}`}>
+      {/* Left */}
       <div className="navbar-left">
         <div className="logo-circle">
           <FaUtensils />
@@ -39,33 +49,47 @@ function Navbar({ role, sidebarOpen, showCart, setShowCart }) {
         </div>
       </div>
 
+      {/* Search */}
       <div className="navbar-search">
         <FaSearch />
-        <input
-          type="text"
-          placeholder="Search menu..."
-        />
+        <input type="text" placeholder="Search menu..." />
       </div>
 
+      {/* Right */}
       <div className="navbar-right">
+        {/* Live Time */}
         <div className="live-time">{time}</div>
 
+        {/* Cart */}
         <button
           className="cart-icon-btn"
           onClick={() => setShowCart(!showCart)}
-          title="Open Cart"
+          title={showCart ? "Close Cart" : "Open Cart"}
         >
           <FaShoppingCart />
+
+          {cartCount > 0 && (
+            <span className="cart-badge">
+              {cartCount}
+            </span>
+          )}
         </button>
 
+        {/* Notification */}
         <FaBell className="icon" />
 
+        {/* Profile */}
         <div className="profile">
           <FaUserCircle size={34} />
 
           <div>
-            <strong>{role}</strong>
-            <p>Logged In</p>
+            <strong>{name}</strong>
+
+            <p>
+              {role === "admin"
+                ? "Administrator"
+                : "Cashier"}
+            </p>
           </div>
         </div>
       </div>
