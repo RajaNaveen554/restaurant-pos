@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 
-// Change this to the password you want
-const password = "user123";
+// Password you want to use
+const password = "admin123";
 
 const hash = bcrypt.hashSync(password, 10);
 

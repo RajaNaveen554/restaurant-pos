@@ -1,9 +1,12 @@
 const db = require("../config/db");
 
-// Get all menu items
+// =========================
+// Get All Menu Items
+// =========================
 exports.getMenu = (req, res) => {
   db.query("SELECT * FROM menu_items", (err, results) => {
     if (err) {
+      console.error(err);
       return res.status(500).json({
         success: false,
         message: "Database Error",
@@ -14,39 +17,37 @@ exports.getMenu = (req, res) => {
   });
 };
 
-// Add new menu item
+// =========================
+// Add New Menu Item
+// =========================
 exports.addMenuItem = (req, res) => {
-  const { name, category, price, available } = req.body;
+  const { name, category, price } = req.body;
 
-  // Validation
-  if (!name || name.trim() === "") {
+  const available = Number(req.body.available);
+  const image = req.file ? req.file.filename : null;
+
+  if (!name || !category || !price) {
     return res.status(400).json({
       success: false,
-      message: "Menu name is required",
+      message: "All fields are required",
     });
   }
-
-  if (!category || category.trim() === "") {
-    return res.status(400).json({
-      success: false,
-      message: "Category is required",
-    });
-  }
-
-  if (!price || price <= 0) {
-    return res.status(400).json({
-      success: false,
-      message: "Price must be greater than 0",
-    });
-  }
-
-  const isAvailable = available ?? 1;
 
   db.query(
-    "INSERT INTO menu_items (name, category, price, available) VALUES (?, ?, ?, ?)",
-    [name, category, price, isAvailable],
+    `INSERT INTO menu_items
+    (name, category, price, available, image)
+    VALUES (?, ?, ?, ?, ?)`,
+    [
+      name,
+      category,
+      price,
+      available,
+      image,
+    ],
     (err) => {
       if (err) {
+        console.error(err);
+
         return res.status(500).json({
           success: false,
           message: "Database Error",
@@ -55,61 +56,68 @@ exports.addMenuItem = (req, res) => {
 
       res.json({
         success: true,
-        message: "Menu item added successfully!",
+        message: "Food Added Successfully",
       });
     }
   );
 };
 
-// Update menu item
+// =========================
+// Update Menu Item
+// =========================
 exports.updateMenuItem = (req, res) => {
   const { id } = req.params;
-  const { name, category, price, available } = req.body;
+  const { name, category, price } = req.body;
 
-  // Validation
-  if (!name || name.trim() === "") {
+  const available = Number(req.body.available);
+  const image = req.file ? req.file.filename : null;
+
+  if (!name || !category || !price) {
     return res.status(400).json({
       success: false,
-      message: "Menu name is required",
+      message: "All fields are required",
     });
   }
 
-  if (!category || category.trim() === "") {
-    return res.status(400).json({
-      success: false,
-      message: "Category is required",
-    });
+  let sql =
+    "UPDATE menu_items SET name=?, category=?, price=?, available=?";
+
+  let values = [
+    name,
+    category,
+    price,
+    available,
+  ];
+
+  // Update image only if a new image is uploaded
+  if (image) {
+    sql += ", image=?";
+    values.push(image);
   }
 
-  if (!price || price <= 0) {
-    return res.status(400).json({
-      success: false,
-      message: "Price must be greater than 0",
-    });
-  }
+  sql += " WHERE id=?";
+  values.push(id);
 
-  const isAvailable = available ?? 1;
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error(err);
 
-  db.query(
-    "UPDATE menu_items SET name=?, category=?, price=?, available=? WHERE id=?",
-    [name, category, price, isAvailable, id],
-    (err) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          message: "Database Error",
-        });
-      }
-
-      res.json({
-        success: true,
-        message: "Menu item updated successfully!",
+      return res.status(500).json({
+        success: false,
+        message: "Database Error",
       });
     }
-  );
+
+    res.json({
+      success: true,
+      message: "Food Updated Successfully",
+    });
+  });
 };
 
-// Delete menu item
+// =========================
+// Delete Menu Item
+// =========================
 exports.deleteMenuItem = (req, res) => {
   const { id } = req.params;
 
@@ -118,6 +126,8 @@ exports.deleteMenuItem = (req, res) => {
     [id],
     (err) => {
       if (err) {
+        console.error(err);
+
         return res.status(500).json({
           success: false,
           message: "Database Error",
@@ -126,7 +136,35 @@ exports.deleteMenuItem = (req, res) => {
 
       res.json({
         success: true,
-        message: "Menu item deleted successfully!",
+        message: "Food Deleted Successfully",
+      });
+    }
+  );
+};
+
+// =========================
+// Toggle Availability
+// =========================
+exports.toggleAvailability = (req, res) => {
+  const { id } = req.params;
+  const { available } = req.body;
+
+  db.query(
+    "UPDATE menu_items SET available=? WHERE id=?",
+    [available, id],
+    (err) => {
+      if (err) {
+        console.error(err);
+
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Availability Updated Successfully",
       });
     }
   );

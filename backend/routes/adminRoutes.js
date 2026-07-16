@@ -3,19 +3,37 @@ const router = express.Router();
 
 const adminController = require("../controllers/adminController");
 const authMiddleware = require("../middleware/authMiddleware");
+const upload = require("../middleware/upload");
 
-// Get all menu items (No login required)
+// Get Menu
 router.get("/menu", adminController.getMenu);
 
-// Protected Routes (Login Required)
+// Add Food
+router.post(
+  "/menu",
+  authMiddleware,
+  upload.single("image"),
+  adminController.addMenuItem
+);
 
-// Add new menu item
-router.post("/menu", authMiddleware, adminController.addMenuItem);
+// Update Food
+router.put(
+  "/menu/:id",
+  authMiddleware,
+  upload.single("image"),
+  adminController.updateMenuItem
+);
 
-// Update menu item
-router.put("/menu/:id", authMiddleware, adminController.updateMenuItem);
-
-// Delete menu item
-router.delete("/menu/:id", authMiddleware, adminController.deleteMenuItem);
+// Delete Food
+router.delete(
+  "/menu/:id",
+  authMiddleware,
+  adminController.deleteMenuItem
+);
+router.patch(
+  "/menu/:id/status",
+  authMiddleware,
+  adminController.toggleAvailability
+);
 
 module.exports = router;

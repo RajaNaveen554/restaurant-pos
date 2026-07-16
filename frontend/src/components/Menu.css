@@ -136,3 +136,30 @@
 .food-content{
     padding:18px;
 }
+/* Out of Stock Badge */
+.out-of-stock {
+  display: inline-block;
+  background: #dc3545;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Disable Card */
+.food-disabled {
+  opacity: 0.8;
+}
+
+/* Disable Button */
+.cart-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.cart-btn:disabled:hover {
+  background: #999;
+}
